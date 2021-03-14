@@ -1,0 +1,8 @@
+Answer: Between OSI reference model and TCP/IP reference model, I find OSI model better.
+
+Reason: As we know, the OSI model has 3 core concepts which are services(defines what a layer does), interfaces(defines how different layers within a machine communicate with one another within same machine), and protocols(defines how 2 distinct machines communicate with each other).
+So, OSI model has quite a well-defined strcture.
+On the other hand, TCP/IP model has some limitations. Firstly, the concepts on services, interfaces and protocols are not well-defined and they are not distinguished. Secondly, TCP/IP is not a generalized model. Also, its "host-to-network" layer is not an actual layer. It defines some functionality of datalink and physical layers of OSI model but they are not well-defined and the layer varies from host to host. But, according to the definition of layer, it must have a well-defined functionality.
+Again, in this model. minor protocols are deeply entrenched as a result of problematic and non-industry-standard code provided by its inexperienced developers. These minor protocols and buggy code were quite hard to replace. 
+
+Well, both the models considered here have their good and bad sides. But, in my point of view, a well-defined structure is a must for doing such sophisticated task as managing the netowrk of communication. Hence, I think OSI model is better than TCP/IP model.
