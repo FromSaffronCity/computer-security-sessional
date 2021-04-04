@@ -41,6 +41,7 @@ SEED Ubuntu VM *(v16.04, 32bit)* provided by SEEDLabs is used as virtual lab env
    using the command `python3 exploit.py`  
 6. run stack_root using the command `./stack_root`  
 7. buffer overflow attack is successful!  
+
 ![alt text](https://github.com/FromSaffronCity/node-js-tutorials/blob/main/buffer-overflow-attack/res/buffer-overlow-attack.png?raw=true)  
 
 ### launching buffer overflow attack to call `secret_function()`  
@@ -65,6 +66,7 @@ SEED Ubuntu VM *(v16.04, 32bit)* provided by SEEDLabs is used as virtual lab env
 6. run stack_root using the command `./stack_root`  
    #### You may debug `./secret-function-call/stack.c` again to see things in details.  
 7. buffer overflow attack is successful!  
+
 ![alt text](https://github.com/FromSaffronCity/node-js-tutorials/blob/main/buffer-overflow-attack/res/secret-function-call.png?raw=true)  
 
 ## references  
