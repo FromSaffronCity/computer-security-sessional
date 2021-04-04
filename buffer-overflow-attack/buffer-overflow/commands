@@ -1,0 +1,41 @@
+# temporarily disabling virtual address space layout randomization (ASLR) by OS using either of the commands
+
+	sudo sysctl -w kernel.randomize_va_space=0
+	sudo sysctl -q kernel.randomize_va_space
+
+# changing location of /bin/sh from /bin/dash to /bin/zsh
+
+	ls -l /bin/sh
+	sudo ln -sf /bin/zsh /bin/sh
+	ls -l /bin/sh
+
+# compiling ./call_shellcode.c and launching shell using machine code written in ./call_shellcode.c
+
+	gcc -o call_shellcode -z execstack -fno-stack-protector call_shellcode.c
+	./call_shellcode
+
+# compiling ./stack.c and setting uid to root
+
+	su root
+	gcc -o stack_root -z execstack -fno-stack-protector stack.c
+	chmod 4755 stack_root
+	su seed
+
+# designing exploit by debugging ./stack.c with gnu debugger (gdb)
+
+	gcc -z execstack -fno-stack-protector -g -o stack_dbg stack.c  # -g for adding debugging symbols
+	gdb stack_dbg
+	b buffer_overflow
+	run
+	p $ebp
+	p &buffer
+	p/d 0x<$ebp> - 0x<&buffer>
+	quit
+
+# preparing exploit written in badfile
+	
+	python3 exploit.py 
+
+# root user password
+
+	seedubuntu

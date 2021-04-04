@@ -1,0 +1,48 @@
+# temporarily disable virtual address space layout randomization (ASLR) by OS using either of the commands
+
+	sudo sysctl -w kernel.randomize_va_space=0
+	sudo sysctl -q kernel.randomize_va_space
+
+# change location of /bin/sh from /bin/dash to /bin/zsh because /bin/dash provides stack-protection
+
+	ls -l /bin/sh
+	sudo ln -sf /bin/zsh /bin/sh
+	ls -l /bin/sh
+
+# compile ./stack.c and create an empty file ./badfile and run executable ./stack_root for testing
+
+	gcc -o stack_root -z execstack -fno-stack-protector stack.c
+	echo > badfile
+	./stack_root
+
+# design exploit by debugging ./stack.c with gnu debugger (gdb)
+
+	gcc -z execstack -fno-stack-protector -g -o stack_dbg stack.c
+	gdb stack_dbg
+
+	b buffer_overflow      ## set breakpoint at buffer_overflow()
+	disas buffer_overflow  ## disassemble to see buffer_overflow() in assembly
+	b *0x<leave> 		   ## set breakpoint at leave instruction
+
+	disas secret_function  ## disassemble to see secret_function() in assembly
+	b *0x<entry-point>     ## set breakpoint at first instruction of secret_function()
+	b secret_function      ## set breakpoint at secret_function()
+
+	run
+
+	p $ebp
+	p &buffer
+	p/d 0x<$ebp> - 0x<&buffer>
+
+	continue
+
+	p $ebp
+	p *((unsigned *)$ebp + 1)
+
+	stepi				   ## proceed step by step
+	continue               ## proceed to next breakpoint
+	quit
+
+# preparing exploit written in badfile
+	
+	python3 exploit.py
