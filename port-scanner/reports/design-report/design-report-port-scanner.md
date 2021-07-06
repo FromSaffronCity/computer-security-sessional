@@ -171,5 +171,11 @@ The **UDP Probe** consists of a single packet sent to a closed port on remote se
 
 
 
-## Justification  
+## Why These Attacks Work  
+
+**Port Scanning** is a common technique used by the attackers to go and discover open ports on a remote server/host machine so that they can exploit the services with known vulnerabilities running on those ports. This attack can also reveal whether active network security measures like firewalls are being deployed in an organizational network.  
+
+On the other hand, **OS Fingerprinting** is the process used by the attackers to infer the type and version of OS running on a target server/host machine so that they can easily exploit the vulnerabilities associated with that OS.  
+
+These attacks are carried out by sending trivial networking packets from attackers to victim server/host machine. As a result, it becomes quite difficult for the active network security measures to distinguish between normal network traffic and malicious network traffic. Also, many implementation techniques have been developed over the years for carrying out these attacks. As a result, attackers have an arsenal of attacking methods at their disposal to bypass detection by these active network security measures.
 
