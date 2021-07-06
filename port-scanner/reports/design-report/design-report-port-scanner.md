@@ -96,79 +96,80 @@ The reason behind so many implementation techniques for port scanning being deve
 
 
 
-## OS Detection  
+## OS Information/Version Detection  
 
-Sometimes on a network it is beneficial to know the Operating System (OS) of a machine. Accessing a system is easier when you know the OS because you can specifically search the Internet for known security holes in the OS. Granted, security holes are usually patched quickly, but you need to know when a security hole exists.  
+Sometimes, inside a network, it is beneficial to know the **Operating System (OS)** of a server/host machine. Accessing a machine is easier when the OS it is running on is known to the attacker because attacker can, then, specifically search for known **Security Vulnerabilities** in that OS. Though, these security vulnerabilities are usually patched quickly, but the attacker just needs to know when and where a certain security vulnerability exists.  
 
 
 
 ### OS Detection Database  
 
-Each Operating System (OS) has unique characteristics in its TCP/IP stack implementation that may serve to identify it on a network. There is a wide range of techniques and methods that helped us get a good estimate of the operating system running on a certain remote machine.
+Each OS has unique characteristics associated with its **TCP/IP Stack Implementation** which may serve to identify the OS in a network. **TCP/IP Stack Fingerprinting** is the passive collection of configuration attributes from a **Remote** server/host machine during **Standard Transport Layer (Layer 4) Network Communications**. The combination of attributes may then be used to infer the OS running on that remote machine (known as **OS Fingerprinting**). There are many techniques and methods for getting a **Good Estimate** of the OS running on a certain remote server/host machine. Two of these techniques and methods are discussed in the following subsections.  
 
-One approach is to use active fingerprinting. That is, special “probe” packets are sent to a certain machine, and based on its response, a certain OS is assumed.
 
-Another approach is to use passive fingerprinting (as used in our project), where legitimate traffic is analyzed and compared for certain key differences in the TCP/IP stack implementation on different versions and types of operating systems.
 
-NMAP has a database which is installed when you install NMAP. The database is used when doing OS detection through os fingerprinting (https://www.google.com/search?q=what+is+operating+system+fingerprinting&rlz=1C1RLNS_enBD933BD933&oq=what+is+os+fingerpri&aqs=chrome.2.0j69i57j0i22i30l3j0i390.5419j0j15&sourceid=chrome&ie=UTF-8), but it is not automatically updated. To look on the Internet for an updated version go to [https://svn.nmap.org/nmap/nmap-os-db](https://svn.nmap.org/nmap/nmap-os-db) as shown in Figure 1.  
+#### Active Fingerprinting  
+
+**Special Probe Packets** are sent to certain server/host machine and based on the response from that remote machine, certain OS is assumed to be running on that machine.  
+
+
+
+#### Passive Fingerprinting  
+
+**Legitimate Traffic** is analyzed and then, compared for certain key differences in the TCP/IP stack implementation on different types and versions of OS.  
+
+
+
+**NMAP (Network Mapper)** is a free and open-source **Network Scanner** created by *Gordon Lyon*. This tool offers a **Database** which is installed together with NMAP. This database is named `nmap-os-db` and used when carrying out OS detection through OS fingerprinting. This database does not automatically get updated. The updated version can be found on the Internet from [svn.nmap.org/nmap/nmap-os-db](https://svn.nmap.org/nmap/nmap-os-db).  
 
 
 
 ### OS Detection Process  
 
-Before we get into the actual command and performing an OS Detection we should cover some details about what is happening during this scan.  
+There are five different **Probes** being performed during OS fingerprinting. Each of these probes may consist of one or more **Packets**. The response to each packet from the target server/host machine helps the attacker to estimate the type and version of OS. The five different probes are discussed in the following subsections.  
 
-There are five separate probes being performed. Each probe may consist of one or more packets. The response to each packet by the target system helps to determine the OS type.  
 
-The five different probes are:  
-1.  Sequence Generation
-2.  ICMP Echo
-3.  TCP Explicit Congestion Notification
-4.  TCP
-5.  UDP
-
-Now we can look at these individually to see what they are doing.  
 
 #### Sequence Generation  
 
-The Sequence Generation Probe consists of six packets. The six packets are sent 100 ms apart and are all TCP SYN packets.  
+The **Sequence Generation Probe** consists of six packets. These packets are all **TCP `SYN` Packets** and sent 100 milliseconds apart from one another. The response for each TCP SYN packet contributes to estimating the type and version of OS.  
 
-The result of each TCP SYN packet will help NMAP determine the OS type.  
+
 
 #### ICMP Echo  
 
-Two ICMP Request packets are sent to the target system with varying settings in the packet.  
+The **ICMP Echo Probe** consists of two packets. These packets are sent to the target server/host machine with varying settings. The responses contribute to verifying the type and version of OS.  
 
-The resulting responses will help verify the OS type by NMAP.  
+
 
 #### TCP Explicit Congestion Notification  
 
-When a lot of packets are being generated and passing through a router causing it to be burdened is known as congestion. The result is that systems slow down to reduce congestion so the router is not dropping packets.  
+When many packets are being generated and passing via certain router, the router becomes burdened and this situation is known as **Congestion**. Consequently, server/host machine slows down to reduce congestion so the router can stop dropping packets. Remote machine responds only for delivered packets. Since each OS handles these packets in different ways, specific values returned contribute to estimating the type and version of OS running on remote machine.  
 
-The packet being sent is only to get a response from the target system. Specific values returned are used to determine the specific OS since each OS handles the packets in different ways.  
+
 
 #### TCP  
 
-Six packets are sent during this probe.  
+The **TCP Probe** consists of six packets. Each packet is sent to either open or closed port on remote server/host machine with specific settings. Responds from remote machine vary depending on the OS running on it. The **TCP Packets** are all sent with varying **Flags** as follows:  
 
-Some packets are sent to open or closed ports with specific packet settings. Again, the results will vary depending on the target OS.  
+1.  No Flags  
+2.  `URG`, `PSH`, `SYN`, and `FIN`  
+3.  `ACK`  
+4.  `SYN`  
+5.  `ACK`  
+6.  `URG`, `PSH`, and `FIN`  
 
-The TCP Packets are all sent with varying flags as follows:  
 
-1.  no flags
-2.  SYN, FIN, URG and PSH
-3.  ACK
-4.  SYN
-5.  ACK
-6.  FIN, PSH, and URG  
 
-![tcp-header](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/reports/design-report/res/tcp-header.jpeg?raw=true)
+![tcp-header](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/reports/design-report/res/tcp-header.jpeg?raw=true)  
+
+
 
 #### UDP  
 
-This probe consists of a single packet sent to a closed port.  
+The **UDP Probe** consists of a single packet sent to a closed port on remote server/host machine. If that port on the target machine is closed and an **ICMP Port Unreachable Message** is returned, then there is no firewall deployed on server/host side.  
 
-If the port used on the target system is closed and an ICMP Port Unreachable message is returned then there is no Firewall.  
 
 
 ## Justification  
+
