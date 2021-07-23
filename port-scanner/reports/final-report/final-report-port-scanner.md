@@ -52,6 +52,12 @@ bool isPortOpen(const string& ipAddress, int port) {
 
 [Network module](https://www.sfml-dev.org/documentation/2.5.1/group__network.php) of [Simple and Fast Multimedia Library (SFML)](https://www.sfml-dev.org/) has been used for this purpose. `isPortOpen()` function takes in a string reference `ipAddress` along with an integer `port` as inputs. Inside this function, a **TCP (Transmission Control Protocol)** connection is established using an instance of [TcpSocket](https://www.sfml-dev.org/documentation/2.5.1/classsf_1_1TcpSocket.php) class via its `connect()` function. This function takes in the string reference `ipAddress` and converts it to an instance of [IpAddress](https://www.sfml-dev.org/documentation/2.5.1/classsf_1_1IpAddress.php) class. After that, it tries to connect the socket to a remote server/host machine with IP address `ipAddress` on port `port`. Then, the returned value from `connect()` function is compared with a predefined `Socket::Done` status code which means the socket has sent/received the data. TCP connection is successfully established with remote server/host machine on specified port, that is, the specified port is open on that machine if `connect()` function returns `Socket::Done`. Finally, the boolean value from the aforementioned comparison is returned from `isPortOpen()` function.  
 
+
+
+![open-port](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/reports/final-report/res/diagrams/open-port.svg?raw=true)  
+
+
+
 Inside `port_scanning.cpp`, the `main()` function takes in IP address of remote server/host machine along with list of ports to be scanned as string inputs either from console or command line. Then, these inputs are processed with other user-defined functions. Finally, port scanning is carried out targeting the specified ports on remote server/host machine.  
 
 
@@ -79,6 +85,10 @@ response = sr1(packet, timeout=2, verbose=False)
 ```
 
 Python module [Scapy](https://scapy.readthedocs.io/en/latest/introduction.html) has been used for this purpose. Scapy is a Python interactive packet manipulation program that enables its users to send, sniff, dissect, and forge network packets. Inside `os_fingerprinting.py` script, `packet` is crafted with **IP (Internet Protocol)** and **ICMP (Internet Control Message Protocol)** layers. IP address of remote server/host machine (`sys.argv[1]`) is set in `dst` field of IP layer. Here, passive OS fingerprinting is carried out with **ICMP echo/Ping messages**. Ping messages are used to find out the availability of a server/host machine on a computer network. After crafting `packet`, ICMP echo request is sent to target server/host machine with `sr1` function. `sr1` function takes in `packet` as one of its inputs and requires root privilege to execute. The function returns ICMP echo reply which is captured in `response`.  
+
+
+
+![ping-messages](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/reports/final-report/res/diagrams/ping-messages.svg?raw=true)  
 
 
 
@@ -147,6 +157,10 @@ With a view to comparing the outputs side by side, all the attacks have been car
 
 
 
+By observing the outputs from both the Nmap and the attack tool for IP address `192.168.1.1` and ports `21-25, 80, 443, 8080`, it can be concluded that target server/host machine is listening on `port 80` for HTTP connection. Also, a version of Linux OS may be running on the target machine.  
+
+
+
 #### Victim: `192.168.1.11`  
 
 ##### Nmap  
@@ -158,6 +172,10 @@ With a view to comparing the outputs side by side, all the attacks have been car
 ##### Attack Tool  
 
 ![192.168.1.11](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/reports/final-report/res/port.scanner/192.168.1.11.NAT.png?raw=true)
+
+
+
+By observing the outputs from both the Nmap and the attack tool for IP address `192.168.1.11` and ports `21-25, 80, 443`, it can be concluded that target server/host machine is not listening on any port for new connection. Also, Nmap has failed to guess the exact OS running on the target machine as an excessive number of existing OS fingerprints matched the signatures. On the other hand, attack tool has guessed that a version of Windows OS may be running on the target machine by analyzing the TTL value.  
 
 
 
@@ -175,6 +193,10 @@ With a view to comparing the outputs side by side, all the attacks have been car
 
 
 
+By observing the outputs from both the Nmap and the attack tool for IP address `192.168.1.16` and ports `21-25, 80, 443`, it can be concluded that target server/host machine is listening on `port 22` for SSH connection. Also, Nmap has guessed that a version of Linux OS may be running on the target machine. On the other hand, attack tool has failed to guess the OS running on the target machine as remote server/host machine did not respond to ICMP echo request.  
+
+
+
 #### Victim: `localhost`  
 
 ##### Nmap  
@@ -186,6 +208,10 @@ With a view to comparing the outputs side by side, all the attacks have been car
 ##### Attack Tool  
 
 ![localhost](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/reports/final-report/res/port.scanner/localhost.png?raw=true)
+
+
+
+By observing the outputs from both the Nmap and the attack tool for `localhost` and ports `21-25, 80, 443`, it can be concluded that target server/host machine is listening on `port 22` for SSH connection. Also, Nmap has guessed that a version of Linux OS may be running on the target machine. On the other hand, attack tool has failed to guess the OS running on the target machine as remote server/host machine did not respond to ICMP echo request.  
 
 
 
@@ -203,7 +229,24 @@ With a view to comparing the outputs side by side, all the attacks have been car
 
 
 
+By observing the outputs from both the Nmap and the attack tool for `scanme.nmap.org` and ports `21-25, 80, 443`, it can be concluded that target server/host machine is listening on `port 22` and `port 80` for SSH and HTTP connections respectively. Also, Nmap has failed precisely guess the OS running on the target machine as no existing OS fingerprint exactly matched the signatures. On the other hand, attack tool has guessed that a version of Linux OS may be running on the target machine by analyzing the TTL value.  
+
+
+
 ## Attack Analysis  
+
+The concerned attack tool carries out two individual attacks. These are:  
+
+1. Port Scanning  
+2. OS Fingerprinting  
+
+Here, outputs from the sophisticated network mapper Nmap has also been observed alongside outputs from the attack tool. After comparing and analyzing their performances, it can be concluded that the attack tool has successfully carried out the port scanning on the remote server/host machine but its performance in OS fingerprinting has not been up to the mark.  
+
+Port scanning involves establishment of TCP connection with remote machine through three-way handshaking. This can be easily done with sockets. Hence, the attack tool has not faced any difficulties in carrying out port scanning and its performance has been up to the mark.  
+
+On the other hand, OS fingerprinting involves sophisticated process of crafting special network packets (active) or analyzing and comparing network traffic for finding out key signatures in TCP/IP stack implementation of remote server/host machine (passive). Nmap carries out a delicate version of active OS fingerprinting. Contrastingly, the attack tool carries out passive OS fingerprinting through Ping messages with only TTL value in consideration. In order to carry out a successful passive OS fingerprinting, other signatures of TCP/IP stack implementation should also be considered and different test should also be run. This is where the attack tool lacks and therefore, its performance has not been up to the mark. However, it has guessed the remote OS correctly for some cases.  
+
+Overall, the attacks carried out can be considered successful to a great extent.  
 
 
 
