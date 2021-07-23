@@ -246,15 +246,61 @@ Port scanning involves establishment of TCP connection with remote machine throu
 
 On the other hand, OS fingerprinting involves sophisticated process of crafting special network packets (active) or analyzing and comparing network traffic for finding out key signatures in TCP/IP stack implementation of remote server/host machine (passive). Nmap carries out a delicate version of active OS fingerprinting. Contrastingly, the attack tool carries out passive OS fingerprinting through Ping messages with only TTL value in consideration. In order to carry out a successful passive OS fingerprinting, other signatures of TCP/IP stack implementation should also be considered and different test should also be run. This is where the attack tool lacks and therefore, its performance has not been up to the mark. However, it has guessed the remote OS correctly for some cases.  
 
-Overall, the attacks carried out can be considered successful to a great extent.  
+Overall, the attacks carried out can be considered successful to a considerable extent.  
 
 
 
 ## OS Fingerprinting with Available Tool  
 
-In order to abide by the imposed constraints, OS fingerprinting tool available on the Github repository [OS-Fingerprinting](https://github.com/cesarghali/OS-Fingerprinting) (coded and written by [Cesar Ghali](https://github.com/cesarghali)) has been thoroughly studied and examined.  
+In order to abide by the imposed constraints and enhance the performance, OS fingerprinting tool available on the Github repository [OS-Fingerprinting](https://github.com/cesarghali/OS-Fingerprinting) (coded and written by [Cesar Ghali](https://github.com/cesarghali)) has been thoroughly studied and examined.  
 
 
 
 ## Countermeasures  
+
+A complete solution for preventing port scanning as well as OS fingerprinting is impossible to a certain degree. This is mainly because many systems on computer networks have ports open and listening to new connection for certain applications. This is particularly applicable for web servers. In addition to that, new methods for carrying out these attacks are designed and developed on a regular basis to evade the state of the art detection mechanisms.  
+
+Nevertheless, a good number of countermeasures for port scanning and OS fingerprinting have been designed and developed over the time. These countermeasures are discussed in the following subsections.  
+
+
+
+### Countermeasures for Port Scanning  
+
+It is equally applicable in the filed of computer security that the best offence is a good defense. As long as there is a publicly accessible server/host machine, a computer network system will be vulnerable to port scanning attack. But, there are handful of things to do for limiting its vulnerabilities.  
+
+
+
+#### Firewall  
+
+By installing a firewall, unauthorized access to private computer network can be prevented. It manages the ports that are publicly exposed and visible. Firewalls can also detect a port scanning attack in progress and shut the malicious connection down.  
+
+
+
+#### TCP Wrapper  
+
+TCP wrapper can provide network administrators the flexibility to permit or deny access to the server/host machines based on IP address as well as domain name.  
+
+
+
+#### Self Port Scanning  
+
+In order to uncover holes in the computer network, internal port scanning can be conducted to determine if there are more open ports than required. Server/host machine can be checked periodically to determine existing vulnerable points that can be exploited.  
+
+
+
+### Countermeasures for OS Fingerprinting  
+
+In order to protect server/host machines on a computer network from OS fingerprinting, there are multiple ways to do so.  
+
+Definitely, carrying out active and passive OS fingerprinting on server/host machines registered in the concerned network is a must. In this way, the information that an attacker may get by doing the same on the machines can be discovered.  
+
+Also, properly configured, implemented, and maintained **IDS (Intrusion Detection System)**, **IPS (Intrusion Prevention System)**, and **Firewall** can mitigate active OS fingerprinting.  
+
+On the other hand, passive OS fingerprinting can be mitigated by ensuring that **NIC (Network Interface Card)** do not operate in promiscuous mode. If some NICs must operate promiscuously for the sake of proper functionality, then they should be monitored closely on a regular basis.  
+
+In addition to that, usage of hubs in computer network should be avoided. Instead, properly configured switches can be used.  
+
+Implementing strong encryption as much as possible in a computer network also makes packet sniffing difficult for the attackers.  
+
+And finally, all of the network logs should be checked frequently. Often, many network attacks can be prevented by analyzing logs on a regular basis.  
 
