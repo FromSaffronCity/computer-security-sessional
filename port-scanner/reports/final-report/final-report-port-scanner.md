@@ -22,19 +22,85 @@
 
 The following programs have been coded and scripts have been written to implement the attack tool:  
 
-- `os_fingerprinting.py` is a Python script designed and written for carrying out OS fingerprinting.  
-- `port_scanning.cpp` is a C++ program designed and coded for carrying out port scanning.  
-- `run.sh` is a Linux shell script designed and written for compiling and running the overall attack tool.  
+- `os_fingerprinting.py` [(script)](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/src/os_fingerprinting.py) is a Python script designed and written for carrying out OS fingerprinting.  
+- `port_scanning.cpp` [(code)](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/src/port_scanning.cpp) is a C++ program designed and coded for carrying out port scanning.  
+- `run.sh` [(script)](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/src/run.sh) is a Linux shell script designed and written for compiling and running the attack tool.  
 
-
-
-The attack sequence and the observed outputs after carrying out an attack are discussed and exhibited in the following subsections.  
+The attack sequence and the observed outputs after carrying out an attack are discussed in the following subsections.  
 
 
 
 ### Attack Sequence  
 
-The overall attack is carried out in several steps.  
+Overall attack is carried out in several steps. Each of the programs and scripts mentioned above plays its role in carrying out the attack. The steps of attack are discussed in the following subsections.  
+
+
+
+#### Port Scanning with `port_scanning.cpp`  
+
+Port scanning is carried out with the following piece of code written in `port_scanning.cpp`.  
+
+```markdown
+#include<SFML/Network.hpp>
+
+using namespace sf;
+
+bool isPortOpen(const string& ipAddress, int port) {
+	return (TcpSocket().connect(ipAddress, port) == Socket::Done);
+}
+```
+
+[Network module](https://www.sfml-dev.org/documentation/2.5.1/group__network.php) of [Simple and Fast Multimedia Library (SFML)](https://www.sfml-dev.org/) has been used for this purpose. `isPortOpen()` function takes in a string reference `ipAddress` along with an integer `port` as inputs. Inside this function, a **TCP (Transmission Control Protocol)** connection is established using an instance of [TcpSocket](https://www.sfml-dev.org/documentation/2.5.1/classsf_1_1TcpSocket.php) class via its `connect()` function. This function takes in the string reference `ipAddress` and converts it to an instance of [IpAddress](https://www.sfml-dev.org/documentation/2.5.1/classsf_1_1IpAddress.php) class. After that, it tries to connect the socket to a remote server/host machine with IP address `ipAddress` on port `port`. Then, the returned value from `connect()` function is compared with a predefined `Socket::Done` status code which means the socket has sent/received the data. TCP connection is successfully established with remote server/host machine on specified port, that is, the specified port is open on that machine if `connect()` function returns `Socket::Done`. Finally, the boolean value from the aforementioned comparison is returned from `isPortOpen()` function.  
+
+Inside `port_scanning.cpp`, the `main()` function takes in IP address of remote server/host machine along with list of ports to be scanned as string inputs either from console or command line. Then, these inputs are processed with other user-defined functions. Finally, port scanning is carried out targeting the specified ports on remote server/host machine.  
+
+
+
+#### OS Fingerprinting with `os_fingerprinting.py`  
+
+Inside `main()` function of `port_scanning.cpp`, OS fingerprinting is carried out after port scanning with the following piece of code.  
+
+```markdown
+system(("sudo python os_fingerprinting.py "+ipAddress).c_str());
+```
+
+`system()` function is used to invoke an operating system command from a C++ program. So basically, the Python script `os_fingerprinting.py` is invoked and executed from C++ file `port_scanning.cpp`. The IP address of the target server/host machine is provided and the command is invoked with root privilege.  
+
+
+
+OS fingerprinting is carried out with the following pieces of code written in `os_fingerprinting.py`.  
+
+```markdown
+from scapy.all import *  
+from scapy.layers.inet import IP, ICMP
+
+packet = IP(dst=sys.argv[1])/ICMP()
+response = sr1(packet, timeout=2, verbose=False)
+```
+
+Python module [Scapy](https://scapy.readthedocs.io/en/latest/introduction.html) has been used for this purpose. Scapy is a Python interactive packet manipulation program that enables its users to send, sniff, dissect, and forge network packets. Inside `os_fingerprinting.py` script, `packet` is crafted with **IP (Internet Protocol)** and **ICMP (Internet Control Message Protocol)** layers. IP address of remote server/host machine (`sys.argv[1]`) is set in `dst` field of IP layer. Here, passive OS fingerprinting is carried out with **ICMP echo/Ping messages**. Ping messages are used to find out the availability of a server/host machine on a computer network. After crafting `packet`, ICMP echo request is sent to target server/host machine with `sr1` function. `sr1` function takes in `packet` as one of its inputs and requires root privilege to execute. The function returns ICMP echo reply which is captured in `response`.  
+
+
+
+```markdown
+if response == None:
+    print('./{}: No Response from {}.\n'.format(sys.argv[0], sys.argv[1]))
+elif IP in response:
+    if response.getlayer(IP).ttl <= 64:
+        os_guess = 'Linux/ FreeBSD(v5)/ MacOS'
+    elif response.getlayer(IP).ttl <= 128:
+        os_guess = 'Windows'
+    else:
+        os_guess = 'Cisco/ Solaris/ SunOS/ FreeBSD(v3.4, v4.0)/ HP-UX(v10.2, v11)'
+```
+
+After capturing ICMP echo reply in `response`, it is analyzed to guess the operating system running on target server/host machine. For this purpose, **TTL (Time to Live) or Hop Count** field of IP layer is examined. TTL is a mechanism which limits the lifespan of data in a computer network. It simply means how long a resolver is supposed to cache the DNS query before the query expires and a new one needs to be done. This TTL value differs among different operating systems which comes in handy while guessing OS running on remote server/host machine. So basically, TTL value of IP layer inside ICMP echo reply is examined to carry out remote OS fingerprinting since this particular TTL value is set by the OS running on remote server/host machine. The default TTL values for different operating systems can be found [here](https://subinsb.com/default-device-ttl-values/).  
+
+
+
+#### Running Attack Tool with `run.sh`  
+
+The Linux shell script `run.sh` builds raw executable from `port_scanning.cpp` by compilation and linking. Then, it runs the raw executable to carry out port scanning followed by OS fingerprinting.  
 
 
 
@@ -50,8 +116,6 @@ It should be emphasized that while not explicitly illegal, **Port Scanning and O
 
 [scanme.nmap.org](http://scanme.nmap.org/) is a service provided by [nmap.org](https://nmap.org/) and [insecure.org](https://insecure.org/). They set up a machine so that enthusiasts can learn about **Nmap (Network Mapper)** and test Nmap installation. The enthusiasts are authorized to carry out port scanning on this machine with Nmap or other port scanners. Not to mention, I own rest of the server/host machines mentioned above.  
 
-
-
 Following ports have been scanned while carrying out port scanning:  
 
 | Port Number | Internet Application Running         |
@@ -64,8 +128,6 @@ Following ports have been scanned while carrying out port scanning:
 | `port 80`   | HTTP (Hypertext Transfer Protocol)   |
 | `port 443`  | HTTPS (HTTP Secure)                  |
 | `port 8080` | Alternative to `port 80`             |
-
-
 
 With a view to comparing the outputs side by side, all the attacks have been carried out using both the Nmap and the attack tool. The observed outputs from the attacker's perspective **(Virtual Machine with Private IP Address `192.168.1.16`)** are exhibited in the following subsections.  
 
