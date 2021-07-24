@@ -254,7 +254,29 @@ Overall, the attacks carried out can be considered successful to a considerable 
 
 In order to abide by the imposed constraints and enhance the performance, OS fingerprinting tool available on the Github repository [OS-Fingerprinting](https://github.com/cesarghali/OS-Fingerprinting) (coded and written by [Cesar Ghali](https://github.com/cesarghali)) has been thoroughly studied and examined.  
 
+This tool carries out passive OS fingerprinting where legitimate computer network traffic is analyzed and compared for certain key differences in the **TCP/IP Stack Implementation** on different types and versions of operating systems. It sends a legitimate **HTTP (Hypertext Transfer Protocol)** request to the victim server/host machine. Then, it runs different tests, based on the response packets, to estimate the type and version of installed OS on the victim machine. This tool takes into account 10 different TCP/IP stack features to filter out the final estimation from 24 different operating system types and versions. These features have different weight values based on their accuracy.  
 
+The main reason behind choosing this particular tool for further examination has been its usage of computer networking libraries and utilities provided in C language. Contrastingly, the attack tool I have designed implements OS fingerprinting with Python language and its networking utilities.  
+
+After thorough exploration and examination, OS fingerprinting has been carried out using the concerned tool. The observed outputs from the attacker's perspective **(Virtual Machine with Private IP Address `192.168.1.16`)** are exhibited in the following subsections.  
+
+
+
+### Victim: `192.168.1.1.`  
+
+![192.168.1.1](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/reports/final-report/res/os-fingerprinting/192.168.1.1.png?raw=true)
+
+
+
+### Victim: `45.33.32.156`  
+
+![45.33.32.156](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/reports/final-report/res/os-fingerprinting/45.33.32.156.png?raw=true)
+
+
+
+The observed outputs align with the estimations made by both the Nmap and the attack tool.  
+
+ 
 
 ## Countermeasures  
 
