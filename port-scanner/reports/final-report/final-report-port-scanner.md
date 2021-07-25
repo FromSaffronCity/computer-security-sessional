@@ -2,23 +2,23 @@
 
 
 
-## Quick Overview  
+## 1. Quick Overview  
 
 
 
-### What is Port Scanning?  
+### 1.1 What is Port Scanning?  
 
 **Port Scanning** is a method for determining **Open Ports** in a computer network or on a remote server/host machine. It is usually done by sending connection request to remote server/host machine.  
 
 
 
-### What is OS Fingerprinting?  
+### 1.2 What is OS Fingerprinting?  
 
 **OS Fingerprinting** is a method for estimating the **Operating System** running on a remote server/host machine. It is usually done by crafting special network packets and analyzing the responses **(Active)** or analyzing the trivial network traffic **(Passive)**.  
 
 
 
-## Attack Description  
+## 2. Attack Description  
 
 The following programs have been coded and scripts have been written to implement the attack tool:  
 
@@ -30,13 +30,17 @@ The attack sequence and the observed outputs after carrying out an attack are di
 
 
 
-### Attack Sequence  
+### 2.1 Attack Sequence  
 
 Overall attack is carried out in several steps. Each of the programs and scripts mentioned above plays its role in carrying out the attack. The steps of attack are discussed in the following subsections.  
 
 
 
-#### Port Scanning with `port_scanning.cpp`  
+<div style="page-break-after: always;"></div>
+
+
+
+#### 2.1.1 Port Scanning with `port_scanning.cpp`  
 
 Port scanning is carried out with the following piece of code written in `port_scanning.cpp`.  
 
@@ -62,7 +66,11 @@ Inside `port_scanning.cpp`, the `main()` function takes in IP address of remote 
 
 
 
-#### OS Fingerprinting with `os_fingerprinting.py`  
+<div style="page-break-after: always;"></div>
+
+
+
+#### 2.1.2 OS Fingerprinting with `os_fingerprinting.py`  
 
 Inside `main()` function of `port_scanning.cpp`, OS fingerprinting is carried out after port scanning with the following piece of code.  
 
@@ -108,13 +116,17 @@ After capturing ICMP echo reply in `response`, it is analyzed to guess the opera
 
 
 
-#### Running Attack Tool with `run.sh`  
+#### 2.1.3 Running Attack Tool with `run.sh`  
 
 The Linux shell script `run.sh` builds raw executable from `port_scanning.cpp` by compilation and linking. Then, it runs the raw executable to carry out port scanning followed by OS fingerprinting.  
 
 
 
-### Observed Outputs  
+<div style="page-break-after: always;"></div>
+
+
+
+### 2.2 Observed Outputs  
 
 It should be emphasized that while not explicitly illegal, **Port Scanning and OS Fingerprinting without Permission is Strictly Prohibited**. The owner of the victim server/host machine can sue the person responsible for the attacks. Therefore, all the attacks for testing and reporting purposes have been carried out targeting the following server/host machines:  
 
@@ -143,7 +155,11 @@ With a view to comparing the outputs side by side, all the attacks have been car
 
 
 
-#### Victim: `192.168.1.1`  
+<div style="page-break-after: always;"></div>
+
+
+
+#### 2.2.1 Victim: `192.168.1.1`  
 
 ##### Nmap  
 
@@ -161,7 +177,11 @@ By observing the outputs from both the Nmap and the attack tool for IP address `
 
 
 
-#### Victim: `192.168.1.11`  
+<div style="page-break-after: always;"></div>
+
+
+
+#### 2.2.2 Victim: `192.168.1.11`  
 
 ##### Nmap  
 
@@ -179,7 +199,11 @@ By observing the outputs from both the Nmap and the attack tool for IP address `
 
 
 
-#### Victim: `192.168.1.16`  
+<div style="page-break-after: always;"></div>
+
+
+
+#### 2.2.3 Victim: `192.168.1.16`  
 
 ##### Nmap  
 
@@ -197,7 +221,11 @@ By observing the outputs from both the Nmap and the attack tool for IP address `
 
 
 
-#### Victim: `localhost`  
+<div style="page-break-after: always;"></div>
+
+
+
+#### 2.2.4 Victim: `localhost`  
 
 ##### Nmap  
 
@@ -215,7 +243,11 @@ By observing the outputs from both the Nmap and the attack tool for `localhost` 
 
 
 
-#### Victim: `scanme.nmap.org`  
+<div style="page-break-after: always;"></div>
+
+
+
+#### 2.2.5 Victim: `scanme.nmap.org`  
 
 ##### Nmap  
 
@@ -233,7 +265,11 @@ By observing the outputs from both the Nmap and the attack tool for `scanme.nmap
 
 
 
-## Attack Analysis  
+<div style="page-break-after: always;"></div>
+
+
+
+## 3. Attack Analysis  
 
 The concerned attack tool carries out two individual attacks. These are:  
 
@@ -250,7 +286,7 @@ Overall, the attacks carried out can be considered successful to a considerable 
 
 
 
-## OS Fingerprinting with Available Tool  
+## 4. OS Fingerprinting with Available Tool  
 
 In order to abide by the imposed constraints and enhance the performance, OS fingerprinting tool available on the Github repository [OS-Fingerprinting](https://github.com/cesarghali/OS-Fingerprinting) (coded and written by [Cesar Ghali](https://github.com/cesarghali)) has been thoroughly studied and examined.  
 
@@ -262,23 +298,27 @@ After thorough exploration and examination, OS fingerprinting has been carried o
 
 
 
-### Victim: `192.168.1.1.`  
+<div style="page-break-after: always;"></div>
+
+
+
+### 4.1 Victim: `192.168.1.1.`  
 
 ![192.168.1.1](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/reports/final-report/res/os-fingerprinting/192.168.1.1.png?raw=true)
 
+The observed output align with the estimations made by both the Nmap and the attack tool.  
 
 
-### Victim: `45.33.32.156`  
+
+### 4.2 Victim: `45.33.32.156`  
 
 ![45.33.32.156](https://github.com/FromSaffronCity/computer-security-sessional/blob/main/port-scanner/reports/final-report/res/os-fingerprinting/45.33.32.156.png?raw=true)
 
+The observed output align with the estimations made by both the Nmap and the attack tool.  
 
 
-The observed outputs align with the estimations made by both the Nmap and the attack tool.  
 
- 
-
-## Countermeasures  
+## 5. Countermeasures  
 
 A complete solution for preventing port scanning as well as OS fingerprinting is impossible to a certain degree. This is mainly because many systems on computer networks have ports open and listening to new connection for certain applications. This is particularly applicable for web servers. In addition to that, new methods for carrying out these attacks are designed and developed on a regular basis to evade the state of the art detection mechanisms.  
 
@@ -286,31 +326,35 @@ Nevertheless, a good number of countermeasures for port scanning and OS fingerpr
 
 
 
-### Countermeasures for Port Scanning  
+### 5.1 Countermeasures for Port Scanning  
 
 It is equally applicable in the filed of computer security that the best offence is a good defense. As long as there is a publicly accessible server/host machine, a computer network system will be vulnerable to port scanning attack. But, there are handful of things to do for limiting its vulnerabilities.  
 
 
 
-#### Firewall  
+#### 5.1.1 Firewall  
 
 By installing a firewall, unauthorized access to private computer network can be prevented. It manages the ports that are publicly exposed and visible. Firewalls can also detect a port scanning attack in progress and shut the malicious connection down.  
 
 
 
-#### TCP Wrapper  
+#### 5.1.2 TCP Wrapper  
 
 TCP wrapper can provide network administrators the flexibility to permit or deny access to the server/host machines based on IP address as well as domain name.  
 
 
 
-#### Self Port Scanning  
+#### 5.1.3 Self Port Scanning  
 
 In order to uncover holes in the computer network, internal port scanning can be conducted to determine if there are more open ports than required. Server/host machine can be checked periodically to determine existing vulnerable points that can be exploited.  
 
 
 
-### Countermeasures for OS Fingerprinting  
+<div style="page-break-after: always;"></div>
+
+
+
+### 5.2 Countermeasures for OS Fingerprinting  
 
 In order to protect server/host machines on a computer network from OS fingerprinting, there are multiple ways to do so.  
 
